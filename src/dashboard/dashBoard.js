@@ -24,7 +24,7 @@ class Dashboard extends Component {
 
   componentDidMount() {
     const rawStockData = stockList['list'];
-    const parsedStockData = rawStockData.map((stockItem)=>{
+    const parsedStockData = rawStockData.map((stockItem) => {
       return [new Date(stockItem['time']), Math.floor(parseFloat(stockItem['price']))];
     });
     this.setState({
@@ -32,16 +32,14 @@ class Dashboard extends Component {
       startDateTime: new Date('2020-03-01 00:00:00'),
       endDateTime: new Date('2020-7-31 23:00:00'),
       selectedTimeZone: 'UTC'
-    }, ()=>{
+    }, () => {
       this.filterStockData(this.state.startDateTime, this.state.endDateTime);
     });
   }
 
   onStartDatetimeChange(newTime) {
     console.log('start', newTime);
-    // const result = moment.tz(newTime, "EST");
     this.setState({ startDateTime: newTime });
-    // console.log('aftertimezone', result.format());
   }
   onEndDatetimeChange(newTime) {
     console.log('end', newTime);
@@ -49,9 +47,9 @@ class Dashboard extends Component {
 
   }
 
-  filterStockData(startTime, endTime){
+  filterStockData(startTime, endTime) {
     this.setState({
-      filteredStockData: this.state.stockData.filter((stockItem)=>{
+      filteredStockData: this.state.stockData.filter((stockItem) => {
         let stockTime = new Date(stockItem[0]);
         return (stockTime >= new Date(startTime) && stockTime <= new Date(endTime));
       })
@@ -63,28 +61,28 @@ class Dashboard extends Component {
     this.setState({ selectedTimeZone: event.target.value });
   }
 
-  handleUpdate(){
-    if(this.state.endDateTime <= this.state.startDateTime){
+  handleUpdate() {
+    if (this.state.endDateTime <= this.state.startDateTime) {
       window.alert("the time interval is not valid.");
-    }else{
+    } else {
       this.filterStockData(this.state.startDateTime, this.state.endDateTime);
     }
-
-    // if(this.state.selectedTimeZone === 'America/Toronto' || this.state.selectedTimeZone === 'Asia/Tokyo'){
-    //   this.setState({
-    //     startDateTime: moment.utc(this.state.startDateTime).tz(this.state.selectedTimeZone).format(),
-    //     endDateTime: moment.utc(this.state.endDateTime).tz(this.state.selectedTimeZone).format(),
-    //   },()=>{
-    //     this.filterStockData(this.state.startDateTime, this.state.endDateTime);
-    //   });
-    // }else{
-    //   this.filterStockData(this.state.startDateTime, this.state.endDateTime);
-    // }
+    console.log('current timezone', this.state.selectedTimeZone);
+    console.log('change timezone', moment.utc(this.state.startDateTime).tz(this.state.selectedTimeZone));
+    if (this.state.selectedTimeZone === 'America/Toronto' || this.state.selectedTimeZone === 'Asia/Tokyo') {
+      this.setState({
+        startDateTime: moment.utc(this.state.startDateTime).tz(this.state.selectedTimeZone)._d,
+        endDateTime: moment.utc(this.state.endDateTime).tz(this.state.selectedTimeZone)._d,
+      }, () => {
+        this.filterStockData(this.state.startDateTime, this.state.endDateTime);
+      });
+    } else {
+      this.filterStockData(this.state.startDateTime, this.state.endDateTime);
+    }
   }
 
 
   render() {
-
     return (
       <Fragment>
         <div className='time-picker-container'>
@@ -148,11 +146,12 @@ class Dashboard extends Component {
             options={{
               chart: {
                 title:
-                  'Price-time chart ',
+                  'Price-time chart',
               },
             }}
             rootProps={{ 'data-testid': '4' }}
           />
+          <div>*Data shows in UTC time</div>
         </div>
       </Fragment>
     )
