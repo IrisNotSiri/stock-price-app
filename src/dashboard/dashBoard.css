@@ -1,0 +1,26 @@
+.time-picker-container {
+  width: 100%;
+}
+
+.time-pickers {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding:  3rem 0 5rem 0;
+  align-items: center;
+}
+
+.time-pickers .submit-button {
+  width: 5rem;
+  height: 3rem;
+  font-size: 1rem;
+  color: whitesmoke;
+  background-color: teal;
+}
+
+.chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
